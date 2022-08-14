@@ -1,26 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import styled from 'styled-components/native';
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { MainNavigator } from "./src/navigator/navigation/MainNavigator";
+import { useFonts } from "expo-font";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { NativeBaseProvider} from 'native-base';
 
-export default function App() {
+const queryClient = new QueryClient();
+
+const App = () => {
+  let [fontsLoaded] = useFonts({
+    regular: require("./assets/fonts/DMSans-Regular.ttf"),
+    medium: require("./assets/fonts/DMSans-Medium.ttf"),
+    bold: require("./assets/fonts/DMSans-Bold.ttf"),
+    abel_regular: require('./assets/fonts/Abel-Regular.ttf')
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
   return (
-    <Container>
-      <Title>🦄 We are excited to see what you build!</Title>
-      <StatusBar style="auto" />
-    </Container>
+    <NativeBaseProvider>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <MainNavigator />
+      </NavigationContainer>
+    </QueryClientProvider>
+    </NativeBaseProvider>
   );
-}
+};
 
-const Container = styled.View`
-	flex: 1;
-	background-color: papayawhip;
-	justify-content: center;
-	align-items: center;
-	padding: 1rem;
-`;
-
-const Title = styled.Text`
-	font-size: 40px;
-	font-weight: 500;
-	color: palevioletred;
-`;
+export default App;
